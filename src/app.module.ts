@@ -25,8 +25,7 @@ import { BoardModule } from './board/board.module';
     UsersModule,
     BoardModule,
   ],
-  controllers: [AuthController, BoardController],
-  providers: [BoardService],
+  controllers: [],
   exports: [],
 })
 export class AppModule {}
