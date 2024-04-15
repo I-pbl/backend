@@ -1,7 +1,9 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  IsNull,
   PrimaryGeneratedColumn,
   Timestamp,
   UpdateDateColumn,
@@ -15,8 +17,10 @@ export class BoardEntity {
   @Column()
   title: string;
 
-  @Column()
-  photo: string;
+  @Column({
+    nullable: true,
+  })
+  photo: string | null;
 
   @Column({ type: 'timestamptz' })
   reservationStart: Date;
@@ -40,11 +44,10 @@ export class BoardEntity {
   area: string;
 
   @UpdateDateColumn({ type: 'timestamptz' })
+  @Exclude()
   updatedAt: Date;
 
   @CreateDateColumn({ type: 'timestamptz' })
+  @Exclude()
   createdAt: Date;
-
-  @Column()
-  userId: number;
 }

@@ -1,22 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { allBoardDto, boardDto } from './dto/board.dto';
+import { allBoardDto, boardDto, createBoardDto } from './dto/board.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { BoardEntity } from './entities/board.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class BoardService {
+  constructor(
+    @InjectRepository(BoardEntity)
+    private boardRepository: Repository<BoardEntity>,
+  ) {}
   async getAll(): Promise<allBoardDto[]> {
-    return [
-      {
-        id: 1,
-        title: 'title',
-        photo: 'photo',
-        reservationStart: new Date(),
-        reservationEnd: new Date(),
-        credit: 100,
-        likes: 1,
-        category: 'category',
-        area: 'area',
-      },
-    ];
+    const allBoard = await this.boardRepository.find();
+    return allBoard;
   }
 
   async getOne(id: number): Promise<boardDto> {
@@ -32,5 +28,25 @@ export class BoardService {
       category: 'category',
       area: 'area',
     };
+  }
+
+  async createBoard(board: createBoardDto) {
+    console.log(board);
+    try {
+      const newBoard = this.boardRepository.create({
+        title: board.title,
+        content: board.content,
+        credit: board.credit,
+        reservationStart: board.reservationStart,
+        reservationEnd: board.reservationEnd,
+        category: board.category,
+        area: 'test',
+        likes: 0,
+      });
+      this.boardRepository.save(newBoard);
+      return newBoard;
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

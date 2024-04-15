@@ -1,3 +1,5 @@
+import { IsDateString, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+
 export class boardDto {
   readonly id: number;
   readonly title: string;
@@ -20,4 +22,30 @@ export class allBoardDto {
   readonly category: string;
   readonly likes: number;
   readonly area: string;
+}
+
+export class createBoardDto {
+  @IsNotEmpty()
+  @IsString()
+  readonly title: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  readonly credit: number;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly content: string;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly category: string;
+
+  @IsNotEmpty()
+  @IsDateString()
+  readonly reservationStart: Date;
+
+  @IsNotEmpty()
+  @IsDateString()
+  readonly reservationEnd: Date;
 }
