@@ -15,7 +15,7 @@ export const getTypeOrmConfig = (
   synchronize: configService.get('TYPEORM_SYNCHRONIZE'),
   autoLoadEntities: true,
   namingStrategy: new SnakeNamingStrategy(),
-  logging: true,
+  logging: false,
   extra: {
     timezone: 'UTC',
   },
