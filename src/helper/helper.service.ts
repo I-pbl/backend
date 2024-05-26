@@ -30,4 +30,13 @@ export class HelperService {
       );
     }
   }
+
+  async getHelper(helperId: number) {
+    return this.helperRepository.findOne({
+      where: {
+        id: helperId,
+      },
+      relations: ['request'],
+    });
+  }
 }

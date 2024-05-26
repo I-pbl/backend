@@ -16,22 +16,21 @@ import {
 @Entity()
 export class Customer {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @OneToOne(() => User, (user) => user.customer)
-  @JoinColumn()
   user: User;
 
   @Column()
   creditCardInfo: string;
 
   @OneToMany(() => Post, (post) => post.customer, { nullable: true })
-  post: Post;
+  postList: Post[];
 
   @OneToMany(() => Receiver, (receiver) => receiver.customer, {
     nullable: true,
   })
-  receiver: Receiver;
+  receiverList: Receiver[];
 
   @CreateDateColumn({ type: 'timestamptz' })
   @Exclude({ toPlainOnly: true })

@@ -18,13 +18,13 @@ export class Receiver {
   id: number;
 
   @Column()
-  Name: string;
+  name: string;
 
   @Column()
-  Cell_Number: number;
+  phoneNumber: string;
 
   @Column()
-  Address: string;
+  address: string;
 
   @Column({ type: 'boolean' })
   owner: boolean;
@@ -34,11 +34,11 @@ export class Receiver {
   })
   photo: string | null;
 
-  @ManyToOne(() => Customer, (customer) => customer.receiver)
+  @ManyToOne(() => Customer, (customer) => customer.receiverList)
   customer: Customer;
 
   @OneToMany(() => Post, (post) => post.receiver)
-  post: Post;
+  postList: Post[];
 
   @CreateDateColumn({ type: 'timestamptz' })
   @Exclude({ toPlainOnly: true })

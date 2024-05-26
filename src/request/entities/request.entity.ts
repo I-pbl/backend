@@ -22,8 +22,8 @@ export class Request {
   @Column()
   offerLetter: string;
 
-  @ManyToOne(() => Post, (post) => post.request)
+  @ManyToOne(() => Post, (post) => post.requestList)
   post: Post;
-  @ManyToOne(() => Helper, (helper) => helper.request)
+  @ManyToOne(() => Helper, (helper) => helper.requestList)
   helper: Helper;
 }

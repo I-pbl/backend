@@ -33,16 +33,10 @@ export class Post {
   time: Date;
 
   @Column()
-  credit: number;
-
-  @Column()
   content: string;
 
   @Column()
-  category: string;
-
-  @Column()
-  area: string;
+  address: string;
 
   @UpdateDateColumn({ type: 'timestamptz' })
   @Exclude()
@@ -52,12 +46,12 @@ export class Post {
   @Exclude()
   createdAt: Date;
 
-  @ManyToOne(() => Customer, (customer) => customer.post)
+  @ManyToOne(() => Customer, (customer) => customer.postList)
   customer: Customer;
 
-  @ManyToOne(() => Receiver, (receiver) => receiver.post)
+  @ManyToOne(() => Receiver, (receiver) => receiver.postList)
   receiver: Receiver;
 
   @OneToMany(() => Request, (request) => request.post)
-  request: Request;
+  requestList: Request[];
 }

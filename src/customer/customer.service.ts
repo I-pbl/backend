@@ -1,7 +1,16 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customer } from './entities/customer.entity';
 import { Repository } from 'typeorm';
+import { CreateReceiverDto } from 'src/receiver/dto/createReceiver.dto';
+import { ReceiverService } from 'src/receiver/receiver.service';
 
 @Injectable()
 export class CustomerService {
@@ -9,6 +18,8 @@ export class CustomerService {
   constructor(
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
+    @Inject(forwardRef(() => ReceiverService))
+    private readonly receiverService: ReceiverService,
   ) {}
 
   async createCustomer() {
@@ -25,5 +36,29 @@ export class CustomerService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async getCustomer(customerId: number): Promise<Customer> {
+    return this.customerRepository.findOne({
+      where: {
+        id: customerId,
+      },
+      relations: ['receiver', 'post'],
+    });
+  }
+
+  async createReceiverList(
+    customerId: number,
+    receiverList: CreateReceiverDto[],
+  ) {
+    const customer = await this.customerRepository.findOne({
+      where: {
+        id: customerId,
+      },
+    });
+    receiverList.forEach(async (receiver) => {
+      await this.receiverService.createReceiver(receiver, customer);
+    });
+    this.customerRepository.save(customer);
   }
 }

@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToOne,
-  OneToMany,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity()
@@ -17,8 +17,10 @@ export class User {
   email: string;
 
   @OneToOne(() => Customer, (customer) => customer.user, { nullable: true })
+  @JoinColumn()
   customer: Customer;
 
   @OneToOne(() => Helper, (helper) => helper.user, { nullable: true })
+  @JoinColumn()
   helper: Helper;
 }

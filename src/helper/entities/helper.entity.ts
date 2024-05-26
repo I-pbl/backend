@@ -36,10 +36,9 @@ export class Helper {
   score: number;
 
   @OneToMany(() => Request, (request) => request.helper, { nullable: true })
-  request: Request;
+  requestList: Request;
 
   @OneToOne(() => User, (user) => user.helper)
-  @JoinColumn()
   user: User;
 
   @CreateDateColumn({ type: 'timestamptz' })
