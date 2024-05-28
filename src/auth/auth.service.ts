@@ -37,8 +37,6 @@ export class AuthService {
       const newUser = await this.usersService.createUser(email);
       if (mode === 'user') {
         newUser.customer = await this.customerService.createCustomer();
-      } else {
-        newUser.helper = await this.helperService.createHelper();
       }
       return this.usersService.updateUser(newUser);
     }

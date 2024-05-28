@@ -21,7 +21,7 @@ export class Helper {
   name: string;
 
   @Column()
-  phone: string;
+  phoneNumber: string;
 
   @Column()
   location: string;

@@ -39,4 +39,8 @@ export class PostService {
       );
     }
   }
+
+  async getAllPosts() {
+    return this.postRepository.find();
+  }
 }

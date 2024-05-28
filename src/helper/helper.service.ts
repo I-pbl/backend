@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Helper } from './entities/helper.entity';
 import { Repository } from 'typeorm';
+import { CreateHelperDto } from './dto/createHelper.dto';
 
 @Injectable()
 export class HelperService {
@@ -11,18 +12,17 @@ export class HelperService {
     private readonly helperRepository: Repository<Helper>,
   ) {}
 
-  async createHelper(): Promise<Helper> {
+  async createHelper(body: CreateHelperDto): Promise<Helper> {
     const newHelper = this.helperRepository.create({
-      name: '',
-      phone: '',
-      location: '',
-      specialties: '',
-      certificate: '',
+      name: body.name,
+      phoneNumber: body.phoneNumber,
+      location: body.location,
+      specialties: body.specialties,
+      certificate: body.certificate,
       score: 0,
     });
     try {
-      const helper = this.helperRepository.save(newHelper);
-      return helper;
+      return await this.helperRepository.save(newHelper);
     } catch (error) {
       throw new HttpException(
         'Internal Server Error',

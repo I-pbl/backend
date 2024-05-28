@@ -19,6 +19,7 @@ import { PostRequisitionDto } from './dto/postRequisition.dto';
 import { PostService } from 'src/post/post.service';
 import { ReceiverService } from 'src/receiver/receiver.service';
 import { Post } from 'src/post/entities/post.entity';
+import { CreateHelperDto } from 'src/helper/dto/createHelper.dto';
 
 @Injectable()
 export class UsersService {
@@ -84,12 +85,32 @@ export class UsersService {
   }
 
   async getHelper(userId: number): Promise<Helper> {
-    return (
-      await this.userRepository.findOne({
-        where: { id: userId },
-        relations: ['helper'],
-      })
-    ).helper;
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['helper'],
+    });
+    const helper = user.helper;
+    if (!helper) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    return helper;
+  }
+
+  async registerHelper(userId: number, body: CreateHelperDto): Promise<Helper> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    const helper = await this.helperService.createHelper(body);
+    try {
+      user.helper = helper;
+      await this.userRepository.save(user);
+      return helper;
+    } catch (error) {
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async createRequisition(

@@ -14,6 +14,7 @@ import { GetUser } from './decorators/GetUser.decorator';
 import { Payload } from 'src/auth/dto/jwt-payload.dto';
 import { CreateUserDto } from './dto/createUser.dto';
 import { PostRequisitionDto } from './dto/postRequisition.dto';
+import { CreateHelperDto } from 'src/helper/dto/createHelper.dto';
 
 @Controller('users')
 @UseGuards(JwtGuard)
@@ -44,7 +45,7 @@ export class UsersController {
     return await this.usersService.getUser(user.userId);
   }
 
-  @Post('/user/register')
+  @Post('/user')
   async registerUser(@GetUser() user: Payload, @Body() body: CreateUserDto) {
     this.validateUserMode(user, 'user');
     this.logger.log(body);
@@ -55,5 +56,14 @@ export class UsersController {
   async getHelpers(@GetUser() user: Payload) {
     this.validateUserMode(user, 'helper');
     return await this.usersService.getHelper(user.userId);
+  }
+
+  @Post('/helper')
+  async registerHelper(
+    @GetUser() user: Payload,
+    @Body() body: CreateHelperDto,
+  ) {
+    this.validateUserMode(user, 'helper');
+    return await this.usersService.registerHelper(user.userId, body);
   }
 }

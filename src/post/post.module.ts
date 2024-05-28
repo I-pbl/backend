@@ -8,7 +8,7 @@ import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
 @Module({
   imports: [TypeOrmModule.forFeature([Post])],
   controllers: [PostController],
-  providers: [PostService],
+  providers: [PostService, JwtStrategy],
   exports: [PostService],
 })
 export class PostModule {}
