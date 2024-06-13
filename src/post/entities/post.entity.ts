@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { Customer } from 'src/customer/entities/customer.entity';
+import { Progress } from 'src/progress/entities/progress.entity';
 import { Receiver } from 'src/receiver/entities/receiver.entity';
 import { Request } from 'src/request/entities/request.entity';
 import {
@@ -54,4 +55,7 @@ export class Post {
 
   @OneToMany(() => Request, (request) => request.post)
   requestList: Request[];
+
+  @OneToOne(() => Progress, (progress) => progress.post)
+  progress: Progress;
 }

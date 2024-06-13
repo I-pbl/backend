@@ -20,10 +20,15 @@ import { PostService } from 'src/post/post.service';
 import { ReceiverService } from 'src/receiver/receiver.service';
 import { Post } from 'src/post/entities/post.entity';
 import { CreateHelperDto } from 'src/helper/dto/createHelper.dto';
+import { RequestService } from 'src/request/request.service';
+import { CreateRequestDto } from 'src/request/dto/createRequest.dto';
+import * as AWS from 'aws-sdk';
+import path from 'path';
 
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -35,6 +40,8 @@ export class UsersService {
     private readonly postService: PostService,
     @Inject(forwardRef(() => ReceiverService))
     private readonly receiverService: ReceiverService,
+    @Inject(forwardRef(() => RequestService))
+    private readonly requestService: RequestService,
   ) {}
 
   async createUser(email: string): Promise<User> {
@@ -65,23 +72,14 @@ export class UsersService {
   }
 
   async getUser(userId: number): Promise<Customer> {
-    return (
-      await this.userRepository.findOne({
-        where: { id: userId },
-        relations: ['customer', 'customer.receiverList', 'customer.postList'],
-      })
-    ).customer;
-  }
-
-  async registerUser(userId: number, receiverList: CreateReceiverDto[]) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['customer'],
+      relations: ['customer', 'customer.receiverList', 'customer.postList'],
     });
-    return await this.customerService.createReceiverList(
-      user.customer.id,
-      receiverList,
-    );
+    if (!user.customer) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    return user.customer;
   }
 
   async getHelper(userId: number): Promise<Helper> {
@@ -129,5 +127,56 @@ export class UsersService {
       title: body.title,
       content: body.content,
     });
+  }
+
+  async createRequest(userId: number, body: CreateRequestDto) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['helper'],
+    });
+    const helper = user.helper;
+    return await this.requestService.createRequest(helper.id, body);
+  }
+
+  async getAllRequisitions(userId: number): Promise<Post[]> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['customer'],
+    });
+    const customer = user.customer;
+    const postList = await this.postService.getAllPostsByCustomerId(
+      customer.id,
+    );
+    return postList.filter(
+      (post) => !post.progress || post.progress.statement !== 'done',
+    );
+  }
+
+  async createReceiver(userId: number, body: CreateReceiverDto) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+      relations: ['customer'],
+    });
+    const customer = user.customer;
+    return await this.receiverService.createReceiver(body, customer);
+  }
+
+  async getAllRequests(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+      relations: [
+        'helper.requestList.progress',
+        'helper.requestList.post.customer',
+      ],
+    });
+    const requestList = user.helper.requestList;
+    return requestList.filter(
+      (request) =>
+        request.progress.statement !== 'complete' && !request.progress.cost,
+    );
   }
 }

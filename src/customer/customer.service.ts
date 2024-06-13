@@ -56,9 +56,20 @@ export class CustomerService {
         id: customerId,
       },
     });
-    receiverList.forEach(async (receiver) => {
+    for (let receiver of receiverList) {
       await this.receiverService.createReceiver(receiver, customer);
+    }
+    return await this.customerRepository.save(customer);
+  }
+
+  async getReceiverList(customerId: number) {
+    const customer = await this.customerRepository.findOne({
+      where: {
+        id: customerId,
+      },
+      relations: ['receiverList'],
     });
-    this.customerRepository.save(customer);
+
+    return customer.receiverList;
   }
 }

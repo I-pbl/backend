@@ -8,6 +8,7 @@ import { HelperModule } from 'src/helper/helper.module';
 import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
 import { PostModule } from 'src/post/post.module';
 import { ReceiverModule } from 'src/receiver/receiver.module';
+import { RequestModule } from 'src/request/request.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ReceiverModule } from 'src/receiver/receiver.module';
     forwardRef(() => HelperModule),
     forwardRef(() => PostModule),
     forwardRef(() => ReceiverModule),
+    forwardRef(() => RequestModule),
   ],
   controllers: [UsersController],
   providers: [UsersService, JwtStrategy],

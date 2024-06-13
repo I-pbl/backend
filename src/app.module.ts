@@ -9,6 +9,8 @@ import { ReceiverModule } from './receiver/receiver.module';
 import { CustomerModule } from './customer/customer.module';
 import { RequestModule } from './request/request.module';
 import { HelperModule } from './helper/helper.module';
+import { S3Module } from './s3/s3.module';
+import { ProgressModule } from './progress/progress.module';
 
 @Module({
   imports: [
@@ -29,6 +31,8 @@ import { HelperModule } from './helper/helper.module';
     CustomerModule,
     RequestModule,
     HelperModule,
+    S3Module,
+    ProgressModule,
   ],
   controllers: [],
   exports: [],

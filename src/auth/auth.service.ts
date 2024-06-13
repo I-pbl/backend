@@ -39,6 +39,9 @@ export class AuthService {
         newUser.customer = await this.customerService.createCustomer();
       }
       return this.usersService.updateUser(newUser);
+    } else if (mode === 'user' && !user.customer) {
+      user.customer = await this.customerService.createCustomer();
+      return this.usersService.updateUser(user);
     }
     return user;
   }

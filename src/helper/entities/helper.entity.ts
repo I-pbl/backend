@@ -35,8 +35,11 @@ export class Helper {
   @Column()
   score: number;
 
+  @Column({ nullable: true })
+  photo: string | null;
+
   @OneToMany(() => Request, (request) => request.helper, { nullable: true })
-  requestList: Request;
+  requestList: Request[];
 
   @OneToOne(() => User, (user) => user.helper)
   user: User;
