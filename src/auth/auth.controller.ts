@@ -23,7 +23,7 @@ export class AuthController {
 
     const user = await this.authService.userLogin(socialUser);
     const token = await this.authService.makeToken(user.id, 'user');
-    this.logger.log(token);
+    console.log(token);
     res.cookie('accessToken', token, {
       maxAge: 24 * 60 * 60 * 1000,
     });
