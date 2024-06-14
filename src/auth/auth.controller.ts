@@ -26,6 +26,8 @@ export class AuthController {
     console.log(token);
     res.cookie('accessToken', token, {
       maxAge: 24 * 60 * 60 * 1000,
+      path: '/',
+      sameSite: 'None',
     });
     res.redirect(process.env.FRONTEND_URL + 'user');
   }
