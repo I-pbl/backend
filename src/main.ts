@@ -13,8 +13,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true,
+    origin: '*',
   });
   setupSwagger(app);
   await app.listen(8080);
