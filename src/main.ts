@@ -14,6 +14,7 @@ async function bootstrap() {
   );
   app.enableCors({
     origin: '*',
+    credentials: true,
   });
   setupSwagger(app);
   await app.listen(8080);
